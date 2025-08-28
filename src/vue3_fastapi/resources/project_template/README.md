@@ -45,6 +45,8 @@ Vueアプリケーションの作成手順は以下を想定しています。
 - Vue Routerを使わない場合:
   - `App.vue`にアプリの機能を実装する
 
+`App.vue`(Vue Routerを使用しない場合)または`Home.vue`(Vue Routerを使用する場合)をテキストエディタで開き、`HelloWorld.vue`を`HellowFastAPI.vue`に置き換えると、FastAPIの動作確認ができます。
+
 ### backendフォルダー
 
 `uv init`コマンドでPythonのプロジェクトを生成した後、FastAPIのサンプルコードを追加しています。
@@ -85,23 +87,27 @@ FastAPIアプリケーションはuvによって`backend/.venv`が作成され�
 
 ### デバッガの設定
 
-- `debug frontend (requires vite dev server running)`: `npm run dev`でVite開発サーバが起動している場合、Google Chromeを使ってVueアプリケーションをデバッグできます。
-- `debug server (fastapi)`: FastAPIアプリケーションのデバッグを開始します。
+- **debug frontend (requires vite dev server running)**: `npm run dev`でVite開発サーバが起動している場合、Google Chromeを使ってVueアプリケーションをデバッグできます。
+- **debug server (fastapi)**: FastAPIアプリケーションのデバッグを開始します。
 
 ### タスクの設定
 
-- `start vite dev server`: `npm run dev`を実行してVite開発サーバを起動します。
-- `npm run build (for production)`: `npm run build`を実行してVueアプリケーションをビルドします。ビルドに成功すると`frontend/dist`フォルダーにビルドしたVueアプリケーションが格納されます。
-- `build FastAPI server`: 以下のビルド処理が実行されます。
+- **start vite dev server**: `npm run dev`を実行してVite開発サーバを起動します。
+- **npm run build (for production)**: `npm run build`を実行してVueアプリケーションをビルドします。ビルドに成功すると`frontend/dist`フォルダーにビルドしたVueアプリケーションが格納されます。
+- **build FastAPI server**: 以下のビルド処理が実行されます。
   - `npm run build -- --mode backend`を実行してVueアプリケーションをビルドします。ビルドに成功すると`backend/public`フォルダーにビルドしたVueアプリケーションが格納されます。
   - `uv build`を実行してFastAPIアプリケーションをビルドします。`backend/public`フォルダーに格納されたVueアプリケーションもPythonパッケージに格納されます。
+- **build FastAPI via CGI**: ApacheのCGIとして使用する場合のビルド処理が実行されます。
+  - Apacheでは`/{{:新規作成するプロジェクト名:}}/index.cgi`となるように`cgi`フォルダー内の`index.cgi`と`.htaccess`をApacheのWeb公開フォルダーに格納します。
+  - `index.cgi`の1行目(shebang)にPythonのパス名を設定してください。初期値の`#!/home/ユーザー名/.venv/bin/python`ままでは動作しません。
+  - `index.cgi`に設定したPythonを使って、ビルドしたwheelファイル(`.whl`)をインストールしてください。(`python -m pip install`)
 
 ## Dockerfile
 
 プロジェクトのフォルダー直下にあるDockerfileでコンテナイメージをビルド・実行できます。
 
 ```bash
-docker build -t {{:新規作成するプロジェクト名(小文字):}}:latest -t .
+docker build -t {{:新規作成するプロジェクト名(小文字):}}:latest .
 docker run -it --rm -p 8000:8000 {{:新規作成するプロジェクト名(小文字):}}
 ```
 

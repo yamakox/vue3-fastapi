@@ -7,7 +7,7 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "command": "cd client && npm run build -- --mode cgi && cd ../server && uv build --wheel"
+      "command": "cd frontend && npm run build -- --mode cgi && cd ../backend && uv build --wheel"
     }
   ]
 }
