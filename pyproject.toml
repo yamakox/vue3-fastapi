@@ -1,0 +1,32 @@
+[project]
+name = "vue3-fastapi"
+dynamic = ["version"]
+description = "Vue3+FastAPIアプリ開発用プロジェクトを作成するツール"
+readme = "README.md"
+authors = [
+    { name = "yamakox", email = "yamakox@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "inquirer>=3.4.1",
+    "typer>=0.16.1",
+]
+
+[project.scripts]
+vue3-fastapi = "vue3_fastapi.cli:app"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.poetry]
+packages = [{include = "vue3_fastapi", from = "src"}]
+include = [{path = "src/vue3_fastapi/resources/**/*", format = ["sdist", "wheel"]}]
+version = "0.0.0"
+
+[tool.poetry.requires-plugins]
+poetry-dynamic-versioning = { version = ">=1.0.0,<2.0.0", extras = ["plugin"] }
+
+[tool.poetry-dynamic-versioning]
+enable = true
+pattern = '(?P<base>\d+\.\d+\.\d+)'

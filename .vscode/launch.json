@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "debug script",
+      "type": "debugpy",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "module": "vue3_fastapi.cli",
+      "console": "integratedTerminal",
+      "autoReload": {
+        "enable": true,
+        "include": ["**/*.py", "**/*.pyw"]
+      },
+      "justMyCode": true
+    }
+  ]
+}

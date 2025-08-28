@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+  # mod_rewrite が有効な場合のみルールを適用する
+  RewriteEngine On
+
+  # 書き換えルールの基準となるパスを設定する
+  # - 以下のパスにSPAが配置されている場合、
+  #   この指定で .htaccess 内のパス解釈が正しく行われる
+  RewriteBase /{{:新規作成するプロジェクト名:}}/
+
+  # 実ファイルやフォルダーでなければ次のRewriteRuleを適用する
+  # - %{REQUEST_FILENAME}：リクエストされたファイルのパス
+  # - !-f：ファイルが存在しない場合
+  # - !-d：フォルダーが存在しない場合
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # Vue Router に処理を渡すため index.html に誘導する
+  # - ^(.*)$：任意の1文字以上のパス(=すべてのパス)
+  # - [L]：このルールがマッチしたら以降のルールを無視（Last）
+  # - index.cgiにパスを渡す(FastAPIには`/{{:新規作成するプロジェクト名:}}/index.cgi/パス`が渡される)
+  RewriteRule ^(.*)$ index.cgi/$1 [QSA,L]
+</IfModule>

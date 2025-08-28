@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "debug frontend (requires vite dev server running)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:5173",
+      "webRoot": "${workspaceFolder}/frontend",
+      "sourceMaps": true
+    },
+    {
+      "name": "debug backend (fastapi)",
+      "type": "debugpy",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/backend",
+      "module": "{{:Pythonパッケージ名:}}",
+      "console": "integratedTerminal",
+      "autoReload": {
+        "enable": true,
+        "include": ["**/*.py", "**/*.pyw"]
+      },
+      "env": {
+        "APP_DEBUG": "1",
+        "BASE_URL": "/"
+      },
+      "justMyCode": true
+    }
+  ]
+}

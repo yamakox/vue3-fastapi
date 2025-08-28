@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build FastAPI via CGI",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "cd client && npm run build -- --mode cgi && cd ../server && uv build --wheel"
+    }
+  ]
+}
