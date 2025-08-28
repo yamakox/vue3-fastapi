@@ -6,6 +6,7 @@ import subprocess
 import re
 from .new_project import NewProject
 from rich import print
+from importlib.metadata import version
 
 app = typer.Typer()
 
@@ -81,6 +82,8 @@ def new(
     no_use_cgi: bool|None=typer.Option(None, '--no-cgi', '-nc', help='ApacheのCGIとして使用しない'),
 ):
     '''Vue3+FastAPIプロジェクトを新規作成します。'''
+
+    print(f'[bold green]Vue3+FastAPI Project Generator Version {version("vue3-fastapi")}[/bold green]')
     try:
         print('[green]ツールを確認します。[/green]')
         _check_command('uv')

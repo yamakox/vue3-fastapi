@@ -41,7 +41,8 @@ class NewProject:
 
     def create(self):
         # avoid warning: `VIRTUAL_ENV=/.../.venv` does not match the project environment path `.venv` and will be ignored
-        del os.environ['VIRTUAL_ENV']
+        if 'VIRTUAL_ENV' in os.environ:
+            del os.environ['VIRTUAL_ENV']
         try:
             self.__create_project_dir()
             self.__create_backend()
