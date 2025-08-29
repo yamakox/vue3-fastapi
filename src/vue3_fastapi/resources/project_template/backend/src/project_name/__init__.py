@@ -18,7 +18,7 @@ async def lifespan(app: FastAPI):
     pass
 
 # MARK: create an app
-def create_app(base_url: str = '/') -> FastAPI:
+def create_app(base_url: str = '') -> FastAPI:
     base_path = Path(__file__).parent.resolve()
     logger.debug(f'create_app {base_url=} {base_path=}')
 
