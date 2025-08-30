@@ -123,7 +123,7 @@ class NewProject:
         print('[green]backendの設定を行います。[/green]')
         backend_dir = self.project_dir / 'backend'
         subprocess.run(
-            ['uv', 'add', 'fastapi', 'uvicorn', 'python-dotenv'], 
+            ['uv', 'add', 'fastapi', 'uvicorn', 'python-dotenv', 'typer'], 
             cwd=backend_dir, 
             check=True,
         )
@@ -162,6 +162,7 @@ class NewProject:
             r'^version = .*': 'dynamic = ["version"]',
             r'^requires = \["poetry-core.*': 'requires = ["poetry-core>=2.0.0,<3.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]', 
             r'^build-backend = .*': 'build-backend = "poetry_dynamic_versioning.backend"',
+            r'^(\[project.scripts\]\n)': f'\\1{self.project_name.lower()}-cli = "{self.package_name}.cli:app"\n',
         })
         with open(pyproject_toml, 'a') as f:
             f.write(f'''

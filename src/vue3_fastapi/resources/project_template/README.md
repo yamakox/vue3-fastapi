@@ -67,6 +67,7 @@ backend
 │       ├── common              # 共通モジュール
 │       │   ├── logger.py       # ロガーモジュール
 │       │   └── settings.py     # 設定モジュール(環境変数の値を取得する)
+│       ├── cli.py              # CLIモジュール ({{:新規作成するプロジェクト名(小文字):}}-cli)
 │       ├── frontend.py         # publicフォルダーをWeb公開するモジュール(Vue Routerに対応)
 │       └── public              # frontendフォルダーで`npm run build`すると生成されます
 └── uv.lock
@@ -97,10 +98,10 @@ FastAPIアプリケーションはuvによって`backend/.venv`が作成され�
 - **build FastAPI server**: 以下のビルド処理が実行されます。
   - `npm run build -- --mode backend`を実行してVueアプリケーションをビルドします。ビルドに成功すると`backend/public`フォルダーにビルドしたVueアプリケーションが格納されます。
   - `uv build`を実行してFastAPIアプリケーションをビルドします。`backend/public`フォルダーに格納されたVueアプリケーションもPythonパッケージに格納されます。
-- **build FastAPI via CGI**: ApacheのCGIとして使用する場合のビルド処理が実行されます。
-  - Apacheでは`/{{:新規作成するプロジェクト名:}}/index.cgi`となるように`cgi`フォルダー内の`index.cgi`と`.htaccess`をApacheのWeb公開フォルダーに格納します。
+- **build FastAPI via CGI**: プロジェクト作成時に`ApacheのCGI用ファイル`を選択した場合に利用可能なタスクです。`cgi`フォルダーに必要なファイルが入っています。
+  - Apacheでは`/{{:新規作成するプロジェクト名:}}/index.cgi`となるように`cgi`フォルダー内の`index.cgi`と`.htaccess`をApacheのWeb公開フォルダーに格納してください。
   - `index.cgi`の1行目(shebang)にPythonのパス名を設定してください。初期値の`#!/home/ユーザー名/.venv/bin/python`ままでは動作しません。
-  - `index.cgi`に設定したPythonを使って、ビルドしたwheelファイル(`.whl`)をインストールしてください。(`python -m pip install`)
+  - `index.cgi`に設定したPythonを使って、ビルドしたwheelファイル(`.whl`)をインストールしてください。(`python -m pip install *.whl`)
 
 ## Dockerfile
 
