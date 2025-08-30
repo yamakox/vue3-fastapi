@@ -16,21 +16,16 @@ class NewProject:
     def __init__(
             self, 
             project_name: str, 
-            parent_dir: str, 
+            parent_dir: Path, 
             python_version: str, 
-            use_typescript: bool, 
-            use_tailwindcss: bool, 
-            use_vue_router: bool,
-            use_cgi: bool,
+            use_options: list[str], 
     ):
         self.project_name = project_name
         self.parent_dir = parent_dir
         self.python_version = python_version
-        self.use_typescript = use_typescript
-        self.use_tailwindcss = use_tailwindcss
-        self.use_vue_router = use_vue_router
-        self.use_cgi = use_cgi
-        self.project_dir = Path(self.parent_dir) / self.project_name
+        self.use_options = use_options
+        self.__init_option_variables()
+        self.project_dir = self.parent_dir / self.project_name
         self.package_name = project_name.replace('-', '_').lower()
         self.variables = {
             '新規作成するプロジェクト名': self.project_name, 
@@ -38,6 +33,12 @@ class NewProject:
             'Pythonバージョン': self.python_version, 
             'Pythonパッケージ名': self.package_name, 
         }
+
+    def __init_option_variables(self):
+        self.use_typescript = 'typescript' in self.use_options
+        self.use_vue_router = 'vue-router' in self.use_options
+        self.use_tailwindcss = 'tailwindcss' in self.use_options
+        self.use_cgi = 'cgi' in self.use_options
 
     def create(self):
         # avoid warning: `VIRTUAL_ENV=/.../.venv` does not match the project environment path `.venv` and will be ignored
@@ -199,7 +200,8 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
             check=True,
         )
         self.__copy_frontend_files()
-        self.__modify_frontend_tsconfig_app_json()
+        if self.use_typescript:
+            self.__modify_frontend_tsconfig_app_json()
         print('[green]frontendの設定を完了しました。[/green]')
 
     def __copy_frontend_files(self):
@@ -209,8 +211,8 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
         for i in src_dir.glob('*'):
             if i.is_file():
                 util.copy_file_with_variables(i, dst_dir / i.name, self.variables)
-        src_dir = project_template_path / 'frontend/src'
-        dst_dir = self.project_dir / 'frontend/src'
+        src_dir = project_template_path / ('frontend/ts' if self.use_typescript else 'frontend/js')
+        dst_dir = self.project_dir / 'frontend'
         util.copy_dir_with_variables(src_dir, dst_dir, self.variables)
 
     def __modify_frontend_tsconfig_app_json(self):
@@ -264,13 +266,14 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
             r'\./components/': '../components/',
             r'\./assets/': '../assets/',
         })
-        src_dir = project_template_path / 'frontend/vue-router/src'
+        if self.use_typescript:
+            src_dir = project_template_path / 'frontend/vue-router/ts/src'
+            main_path = self.project_dir / 'frontend/src/main.ts'
+        else:
+            src_dir = project_template_path / 'frontend/vue-router/js/src'
+            main_path = self.project_dir / 'frontend/src/main.js'
         dst_dir = self.project_dir / 'frontend/src'
         util.copy_dir_with_variables(src_dir, dst_dir, self.variables)
-        # ToDo: main.jsまたはmain.tsを修正する
-        main_path = self.project_dir / 'frontend/src/main.js'
-        if not main_path.exists():
-            main_path = self.project_dir / 'frontend/src/main.ts'
         util.replace_text_of_file(main_path, {
             r"(import App from './App.vue')(;)?\n": r"\1\2\nimport router from './router';",
             r"(createApp\(App\))": r"\1.use(router)",

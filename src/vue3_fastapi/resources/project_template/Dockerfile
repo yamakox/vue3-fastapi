@@ -10,16 +10,14 @@ COPY ./ ./
 WORKDIR "/opt/app/frontend"
 RUN \
     apk update && \
-    apk add --no-cache git npm && \
-    npm install && \
+    apk add --no-cache git npm
+
+RUN npm install && \
     npm run build -- --mode backend
 
 WORKDIR "/opt/app/backend"
 RUN \
     ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
-    apk update && \
-    apk add --no-cache \
-        git linux-headers build-base autoconf g++ gcc libc-dev make && \
     uv build --wheel
 
 FROM python:${PYTHON_VERSION}-alpine${ALPINE_VERSION}
@@ -32,12 +30,7 @@ ENV PORT=$PORT
 
 WORKDIR "/opt/app"
 COPY --from=0 /opt/app/backend/dist/*.whl ./
-RUN \
-    apk update && \
-    apk add --no-cache --virtual .build-deps \
-        git linux-headers build-base autoconf g++ gcc libc-dev make && \
-    python3 -m pip install --root-user-action ignore -U pip setuptools *.whl && \
-    apk del .build-deps
+RUN python3 -m pip install --root-user-action ignore -U pip setuptools *.whl
 
 # https://docs.docker.com/reference/build-checks/json-args-recommended/
 SHELL ["/bin/sh", "-c"]
