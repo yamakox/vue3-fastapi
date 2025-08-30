@@ -13,7 +13,8 @@ dependencies = [
 ]
 
 [project.scripts]
-vue3-fastapi-cli = "vue3_fastapi.cli:app"
+# NOTE: uvxで実行可能にするときはPythonパッケージ名と同じにする
+vue3-fastapi = "vue3_fastapi.cli:app"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0", "poetry-dynamic-versioning>=1.0.0,<2.0.0"]
