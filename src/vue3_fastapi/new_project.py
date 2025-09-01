@@ -38,6 +38,7 @@ class NewProject:
         self.use_typescript = 'typescript' in self.use_options
         self.use_vue_router = 'vue-router' in self.use_options
         self.use_tailwindcss = 'tailwindcss' in self.use_options
+        self.use_plotly = 'plotly' in self.use_options
         self.use_cgi = 'cgi' in self.use_options
 
     def create(self):
@@ -56,6 +57,8 @@ class NewProject:
                 self.__setup_tailwindcss()
             if self.use_vue_router:
                 self.__copy_vue_router_files()
+            if self.use_plotly:
+                self.__copy_plotly_files()
             self.__copy_vscode_files()
             if self.use_cgi:
                 self.__copy_fastapi_cgi_files()
@@ -279,6 +282,26 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
             r"(import App from './App.vue')(;)?\n": r"\1\2\nimport router from './router';",
             r"(createApp\(App\))": r"\1.use(router)",
         })
+
+    def __copy_plotly_files(self):
+        print('[green]vue3-plotlyの設定を行います。[/green]')
+        frontend_dir = self.project_dir / 'frontend'
+        subprocess.run(
+            ['npm', 'install', '--save', '@yamakox/vue3-plotly', 'plotly.js-dist-min', ], 
+            cwd=frontend_dir, 
+            check=True,
+        )
+        if self.use_typescript:
+            subprocess.run(
+                ['npm', 'install', '--save-dev', '@types/plotly.js', 'vue-component-type-helpers', ], 
+                cwd=frontend_dir, 
+                check=True,
+            )
+            src_dir = project_template_path / 'frontend/plotly/ts/src'
+        else:
+            src_dir = project_template_path / 'frontend/plotly/js/src'
+        dst_dir = self.project_dir / 'frontend/src'
+        util.copy_dir_with_variables(src_dir, dst_dir, self.variables)
 
     def __copy_vscode_files(self):
         print('[green].vscodeフォルダーをコピーします。[/green]')

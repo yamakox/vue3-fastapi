@@ -13,6 +13,7 @@ options = {
     'typescript': 'TypeScript',
     'vue-router': 'Vue Router',
     'tailwindcss': 'TailwindCSS',
+    'plotly': 'vue3-plotly',
     'cgi': 'ApacheのCGI用ファイル',
 }
 
@@ -107,6 +108,8 @@ def new(
                 path_type=inquirer.Path.DIRECTORY,
             )
             parent_dir = Path(_dir).resolve()
+        else:
+            parent_dir = parent_dir.resolve()
         assert (parent_dir is not None and project_name is not None)
         project_dir = parent_dir / project_name
         if project_dir.exists():

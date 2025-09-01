@@ -6,7 +6,7 @@
 
 ### frontendフォルダー
 
-TypeScriptを選択すると、`npm create vite@latest -- --template vue-ts`コマンドでVue+TypeScriptのプロジェクトを生成した後、viteやtsconfigの設定をカスタマイズしています。以下はVue Routerを使った場合のファイル構成です。
+TypeScriptを選択すると、`npm create vite@latest -- --template vue-ts`コマンドでVue+TypeScriptのプロジェクトを生成した後、viteやtsconfigの設定をカスタマイズしています。以下はVue Routerと[vue3-plotly](https://www.npmjs.com/package/@yamakox/vue3-plotly)を使った場合のファイル構成です。
 
 ```bash -c "tree -I '.venv|node_modules|__pycache__' frontend"
 frontend
@@ -21,6 +21,7 @@ frontend
 │   ├── assets                  # Vueコンポーネントで使う静的ファイルはここに格納してください
 │   │   └── vue.svg
 │   ├── components
+│   │   ├── HelloFastAPI.vue    # Plotlyを使ったサンプルコンポーネントです
 │   │   ├── HelloFastAPI.vue    # backendのexampleモジュールで実装したAPIのサンプルコンポーネントです
 │   │   └── HelloWorld.vue
 │   ├── main.ts
@@ -29,6 +30,8 @@ frontend
 │   ├── router
 │   │   └── index.ts            # Vue Routerのルーティング設定です
 │   ├── style.css
+│   ├── types
+│   │   └── plotly.d.ts         # Plotlyの型定義ファイルです
 │   └── vite-env.d.ts
 ├── tsconfig.app.json
 ├── tsconfig.json
@@ -46,6 +49,19 @@ Vueアプリケーションの作成手順は以下を想定しています。
   - `App.vue`にアプリの機能を実装する
 
 `App.vue`(Vue Routerを使用しない場合)または`Home.vue`(Vue Routerを使用する場合)をテキストエディタで開き、`HelloWorld.vue`を`HellowFastAPI.vue`に置き換えると、FastAPIの動作確認ができます。
+
+また、`App.vue`または`Home.vue`に`ExamplePlot`を追加すると、Plotlyを使ったサンプルコンポーネントの動作確認ができます。
+
+```App.vue
+<script setup lang="ts">
+...
+import ExamplePlot from './components/ExamplePlot.vue'
+</script>
+<template>
+  ...
+  <ExamplePlot />
+</template>
+```
 
 ### backendフォルダー
 
