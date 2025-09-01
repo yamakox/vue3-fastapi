@@ -6,7 +6,7 @@
 
 ### frontendフォルダー
 
-TypeScriptを選択すると、`npm create vite@latest -- --template vue-ts`コマンドでVue+TypeScriptのプロジェクトを生成した後、viteやtsconfigの設定をカスタマイズしています。以下はVue Routerと[vue3-plotly](https://www.npmjs.com/package/@yamakox/vue3-plotly)を使った場合のファイル構成です。
+`npm create vite@latest -- --template vue-ts`コマンド(TypeScriptを選択しない場合は`--template vue`)でVueプロジェクトを生成した後、viteやtsconfigの設定をカスタマイズしています。以下はVue Routerと[vue3-plotly](https://www.npmjs.com/package/@yamakox/vue3-plotly)を使った場合のファイル構成です。
 
 ```bash -c "tree -I '.venv|node_modules|__pycache__' frontend"
 frontend
