@@ -1,6 +1,6 @@
 # {{:新規作成するプロジェクト名:}} アプリケーション (Vue3 + FastAPI)
 
-本アプリケーションは[vue3-fastapi-prompt](https://github.com/yamakox/vue3-fastapi-prompt)を使ってプロジェクトを生成しています。
+本アプリケーションは[vue3-fastapi](https://github.com/yamakox/vue3-fastapi)を使ってプロジェクトを生成しています。
 
 ## ファイル一覧
 
