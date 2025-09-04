@@ -26,10 +26,11 @@ def create_app(base_url: str = '') -> FastAPI:
     app = FastAPI(lifespan=lifespan, root_path=base_url)
 
     # CORS対策
-    origins = [
-        'http://localhost:5173', 
-    #   'https://hogehoge.com', 
-    ]
+    if settings.FRONTEND_URLS:
+        origins = [i.strip().removesuffix('/') for i in settings.FRONTEND_URLS.split(',') if i.strip()]
+    else:
+        origins = ['http://localhost:5173']
+
     app.add_middleware(
         CORSMiddleware, 
         allow_origins=origins, 
