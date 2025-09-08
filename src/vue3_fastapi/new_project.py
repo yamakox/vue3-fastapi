@@ -10,6 +10,7 @@ import json
 import os
 
 project_template_path = resource_path / 'project_template'
+scheduler_path = resource_path / 'apscheduler'
 fastapi_cgi_path = resource_path / 'fastapi_cgi'
 plotly_path = resource_path / 'plotly'
 vue_router_path = resource_path / 'vue-router'
@@ -29,18 +30,14 @@ class NewProject:
         self.__init_option_variables()
         self.project_dir = self.parent_dir / self.project_name
         self.package_name = project_name.replace('-', '_').lower()
-        self.variables = {
-            '新規作成するプロジェクト名': self.project_name, 
-            '新規作成するプロジェクト名(小文字)': self.project_name.lower(), 
-            'Pythonバージョン': self.python_version, 
-            'Pythonパッケージ名': self.package_name, 
-        }
+        self.__init_variables()
 
     def __init_option_variables(self):
         self.use_typescript = 'typescript' in self.use_options
         self.use_vue_router = 'vue-router' in self.use_options
         self.use_tailwindcss = 'tailwindcss' in self.use_options
         self.use_plotly = 'plotly' in self.use_options
+        self.use_scheduler = 'scheduler' in self.use_options
         self.use_cgi = 'cgi' in self.use_options
 
     def create(self):
@@ -62,6 +59,8 @@ class NewProject:
             if self.use_plotly:
                 self.__copy_plotly_files()
             self.__copy_vscode_files()
+            if self.use_scheduler:
+                self.__copy_scheduler_files()
             if self.use_cgi:
                 self.__copy_fastapi_cgi_files()
                 self.__modify_fastapi_cgi_tasks_json()
@@ -70,6 +69,30 @@ class NewProject:
         except Exception as e:
             print(f'[bold red]{e}[/bold red]')
             raise typer.Exit(1)
+
+    def __init_variables(self):
+        self.variables = {
+            '新規作成するプロジェクト名': self.project_name, 
+            '新規作成するプロジェクト名(小文字)': self.project_name.lower(), 
+            'Pythonバージョン': self.python_version, 
+            'Pythonパッケージ名': self.package_name, 
+            'additional_imports': '', 
+            'lifespan_init': '', 
+            'lifespan_exit': '', 
+        }
+
+        additional_imports = ''
+        lifespan_init = ''
+        lifespan_exit = ''
+
+        if self.use_scheduler:
+            additional_imports += 'from . import scheduler\n'
+            lifespan_init += '    scheduler.start()\n'
+            lifespan_exit += '    scheduler.stop()\n'
+
+        self.variables['additional_imports'] = additional_imports
+        self.variables['lifespan_init'] = lifespan_init if lifespan_init else '    pass\n'
+        self.variables['lifespan_exit'] = lifespan_exit if lifespan_exit else '    pass\n'
 
     def __create_project_dir(self):
         print(f'[green]新規プロジェクトのフォルダーを作成します:[/green] {self.project_dir}')
@@ -137,6 +160,12 @@ class NewProject:
             cwd=backend_dir, 
             check=True,
         )
+        if self.use_scheduler:
+            subprocess.run(
+                ['uv', 'add', 'apscheduler', 'python-dateutil'], 
+                cwd=backend_dir, 
+                check=True,
+            )
         if self.use_cgi:
             subprocess.run(
                 ['uv', 'add', 'a2wsgi'], 
@@ -309,6 +338,12 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
         print('[green].vscodeフォルダーをコピーします。[/green]')
         src_dir = project_template_path / '.vscode'
         dst_dir = self.project_dir / '.vscode'
+        util.copy_dir_with_variables(src_dir, dst_dir, self.variables)
+
+    def __copy_scheduler_files(self):
+        print('[green]APSchedulerの設定を行います。[/green]')
+        src_dir = scheduler_path / 'src/project_name'
+        dst_dir = self.project_dir / 'backend/src' / self.package_name
         util.copy_dir_with_variables(src_dir, dst_dir, self.variables)
 
     def __copy_fastapi_cgi_files(self):

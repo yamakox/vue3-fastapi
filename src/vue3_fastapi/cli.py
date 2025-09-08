@@ -14,6 +14,7 @@ options = {
     'vue-router': 'Vue Router',
     'tailwindcss': 'TailwindCSS',
     'plotly': 'vue3-plotly',
+    'scheduler': 'APScheduler',
     'cgi': 'ApacheのCGI用ファイル',
 }
 

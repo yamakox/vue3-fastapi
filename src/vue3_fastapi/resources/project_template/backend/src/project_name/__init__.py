@@ -6,17 +6,15 @@ from . import api
 from . import frontend
 from .common.logger import logger
 from .common import settings
-
+{{:additional_imports:}}
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # ToDo: 初期化処理
-    pass
-
+{{:lifespan_init:}}
     yield   # app実行中にここに到達する
 
     # ToDo: 終了処理
-    pass
-
+{{:lifespan_exit:}}
 # MARK: create an app
 def create_app(base_url: str = '') -> FastAPI:
     base_path = Path(__file__).parent.resolve()
