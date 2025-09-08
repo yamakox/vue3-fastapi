@@ -11,6 +11,8 @@ import os
 
 project_template_path = resource_path / 'project_template'
 fastapi_cgi_path = resource_path / 'fastapi_cgi'
+plotly_path = resource_path / 'plotly'
+vue_router_path = resource_path / 'vue-router'
 
 class NewProject:
     def __init__(
@@ -271,10 +273,10 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
             r'\./assets/': '../assets/',
         })
         if self.use_typescript:
-            src_dir = project_template_path / 'frontend/vue-router/ts/src'
+            src_dir = vue_router_path / 'ts/src'
             main_path = self.project_dir / 'frontend/src/main.ts'
         else:
-            src_dir = project_template_path / 'frontend/vue-router/js/src'
+            src_dir = vue_router_path / 'js/src'
             main_path = self.project_dir / 'frontend/src/main.js'
         dst_dir = self.project_dir / 'frontend/src'
         util.copy_dir_with_variables(src_dir, dst_dir, self.variables)
@@ -297,9 +299,9 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
                 cwd=frontend_dir, 
                 check=True,
             )
-            src_dir = project_template_path / 'frontend/plotly/ts/src'
+            src_dir = plotly_path / 'ts/src'
         else:
-            src_dir = project_template_path / 'frontend/plotly/js/src'
+            src_dir = plotly_path / 'js/src'
         dst_dir = self.project_dir / 'frontend/src'
         util.copy_dir_with_variables(src_dir, dst_dir, self.variables)
 
