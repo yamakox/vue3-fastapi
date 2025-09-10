@@ -15,7 +15,7 @@
       "options": {
         "cwd": "${workspaceFolder}/frontend"
       },
-      "command": "npm run build"
+      "command": "npm run build && tar Jcvf {{:新規作成するプロジェクト名:}}.tar.xz -C dist {{:新規作成するプロジェクト名:}}/"
     },
     {
       "label": "build FastAPI server",
