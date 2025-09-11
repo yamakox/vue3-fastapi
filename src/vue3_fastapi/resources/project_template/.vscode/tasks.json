@@ -2,6 +2,14 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "install packages",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "command": "cd frontend && npm i && cd ../backend && uv sync"
+    },
+    {
       "label": "start vite dev server",
       "type": "shell",
       "options": {
