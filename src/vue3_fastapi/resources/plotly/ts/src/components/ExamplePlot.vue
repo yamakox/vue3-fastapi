@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Plot from '@yamakox/vue3-plotly'
 import Plotly from 'plotly.js-dist-min'
-import { useTemplateRef } from 'vue'
+import { useTemplateRef, onMounted } from 'vue'
 import type { ComponentExposed } from 'vue-component-type-helpers'
 
 const plot1 = useTemplateRef<ComponentExposed<typeof Plot>|null>('plot1')
@@ -16,6 +16,22 @@ const data: Partial<Plotly.Data>[] = [
 const layout: Partial<Plotly.Layout> = {
   title: { text: 'Plotly Chart Example', font: { size: 20 } }, width: 600, height: 400
 }
+
+onMounted(async () => {
+  try {
+    const response = await fetch(
+      'http://localhost:8000/api/v1/example/cosine-curve'
+    )
+    if (!response.ok) {
+      console.log(`onMounted: ${response.statusText}`)
+      return
+    }
+    const data = await response.json()
+    await plot1.value?.addTraces(data)
+  } catch (error) {
+    console.log('onMounted error:', error)
+  }
+})
 </script>
 
 <template>

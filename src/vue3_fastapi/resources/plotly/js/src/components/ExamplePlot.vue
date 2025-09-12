@@ -1,6 +1,6 @@
 <script setup>
 import Plot from '@yamakox/vue3-plotly'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
 const plot1 = ref()
 
@@ -14,6 +14,22 @@ const data = [
 const layout = {
   title: { text: 'Plotly Chart Example', font: { size: 20 } }, width: 600, height: 400
 }
+
+onMounted(async () => {
+  try {
+    const response = await fetch(
+      'http://localhost:8000/api/v1/example/cosine-curve'
+    )
+    if (!response.ok) {
+      console.log(`onMounted: ${response.statusText}`)
+      return
+    }
+    const data = await response.json()
+    await plot1.value?.addTraces(data)
+  } catch (error) {
+    console.log('onMounted error:', error)
+  }
+})
 </script>
 
 <template>

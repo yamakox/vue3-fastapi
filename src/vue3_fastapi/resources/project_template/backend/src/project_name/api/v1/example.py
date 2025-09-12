@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from pathlib import Path
 import threading
+import math
 
 # global variables
 lock = threading.Lock()
@@ -27,5 +28,12 @@ def create_router(base_path: Path) -> APIRouter:
             global counter
             counter += 1
             return {"counter": counter}
+
+    # MARK: /api/v1/example/cosine-curve
+    @router.get("/cosine-curve")
+    def consine_curve():
+        x = [2 * math.pi * i / 20 for i in range(21)]
+        y = [math.cos(i) for i in x]
+        return {'x': x, 'y': y, 'type': 'scatter', 'mode': 'lines+markers', 'name': 'Cosine Curve'}
 
     return router
