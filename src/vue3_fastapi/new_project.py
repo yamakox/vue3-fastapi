@@ -236,6 +236,7 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
         )
         self.__copy_frontend_files()
         self.__add_lines_to_frontend_gitignore()
+        self.__modify_frontend_index_html()
         if self.use_typescript:
             self.__modify_frontend_tsconfig_app_json()
         print('[green]frontendの設定を完了しました。[/green]')
@@ -256,6 +257,13 @@ pattern = '(?P<base>\\d+\\.\\d+\\.\\d+)'
         gitignore = self.project_dir / 'frontend/.gitignore'
         with open(gitignore, 'a') as f:
             f.write('\n*.tar.xz\n')
+
+    def __modify_frontend_index_html(self):
+        print('[green]frontend/index.htmlを修正します。[/green]')
+        index_html = self.project_dir / 'frontend/index.html'
+        util.replace_text_of_file(index_html, {
+            r'<title>[^<]*</title>': f'<title>{self.project_name}</title>',
+        })
 
     def __modify_frontend_tsconfig_app_json(self):
         print('[green]frontend/tsconfig.app.jsonを修正します。[/green]')
