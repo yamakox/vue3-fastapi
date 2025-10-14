@@ -102,7 +102,7 @@ class NewProject:
         self.backend_dir = self.project_dir / 'backend'
         print(f'[green]backend用プロジェクト(Python+FastAPI)を作成します:[/green] {self.backend_dir}')
         subprocess.run(
-            ['uv', 'init', '--python', self.python_version, '--package', self.project_name, '--build-backend', 'poetry', '--vcs', 'none'], 
+            ['uv', 'init', '--python', self.python_version, '--build-backend', 'poetry', '--vcs', 'none', self.project_name], 
             cwd=self.project_dir, 
             check=True,
         )
@@ -114,7 +114,7 @@ class NewProject:
         frontend_name = self.project_name.lower()
         template = 'vue-ts' if self.use_typescript else 'vue'
         subprocess.run(
-            ['npm', 'create', 'vite@latest', frontend_name, '--', '--template', template], 
+            ['npm', 'create', 'vite@latest', frontend_name, '--', '--template', template, '--no-interactive', '--no-rolldown'], 
             cwd=self.project_dir, 
             check=True,
         )
